@@ -1,0 +1,75 @@
+# https://tea.xyz/what-is-this-file
+---
+version: 1.0.0
+codeOwners:
+  - '0x63857cc446370597585ae32c2c5117e74f5468F8'
+quorum: 1
+
+
+using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEngine;
+
+public class playermoviment : MonoBehaviour
+{
+    public int force_jump;
+    public int move_speed;
+    float cooldown_;
+    bool can_jump = true;
+    public AudioClip pulo_clip;
+    public AudioSource pulo_source;
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void FixedUpdate()
+    {
+        
+        WASDplayer();
+        
+    }
+    // Update is called once per frame
+    void Update()
+    {
+        pulo();
+        cooldown();
+
+    }
+    void WASDplayer()
+
+    {
+        float horizontal = Input.GetAxisRaw("Horizontal");
+        float vertical = Input.GetAxisRaw("Vertical");
+
+        gameObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(horizontal * move_speed * Time.deltaTime, vertical * 0 * Time.deltaTime));
+
+    }
+    void pulo()
+    {
+  
+        if (can_jump == true && Input.GetKeyDown(KeyCode.Space))
+        {
+            gameObject.GetComponent<Rigidbody2D>().AddForce(Vector2.up * force_jump, ForceMode2D.Impulse);
+            pulo_source.PlayOneShot(pulo_clip);
+            can_jump = false;
+            cooldown_ = 0;
+        }
+    }
+
+    void cooldown()
+    {
+        if (cooldown_ >= 1 && can_jump == false)
+        {
+
+            can_jump = true;
+        }
+        else
+        {
+            cooldown_ += Time.deltaTime;
+        }
+    }
+}
